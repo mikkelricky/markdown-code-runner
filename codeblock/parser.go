@@ -2,11 +2,14 @@ package codeblock
 
 import (
 	"bufio"
-	"io"
+	"fmt"
+	"log"
+	"os"
 	"regexp"
+	"strings"
 )
 
-func Parse(reader *bufio.Reader) []CodeBlock {
+func Parse(reader *bufio.Reader) CodeBlockCollection {
 	var blocks []CodeBlock
 
 	// https://github.github.com/gfm/#fenced-code-blocks
@@ -16,14 +19,10 @@ func Parse(reader *bufio.Reader) []CodeBlock {
 	var block CodeBlock
 	var inCodeBlock bool = false
 
-	for {
-		l, _, err := reader.ReadLine()
+	scanner := bufio.NewScanner(reader)
 
-		if err == io.EOF {
-			break
-		}
-
-		line := string(l)
+	for scanner.Scan() {
+		line := scanner.Text()
 
 		match := codeBlockStart.FindStringSubmatch(line)
 		if len(match) > 0 {
@@ -37,6 +36,27 @@ func Parse(reader *bufio.Reader) []CodeBlock {
 			block.AddLine(line)
 		}
 	}
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintln(os.Stderr, "error reading input:", err)
+	}
 
-	return blocks
+	return NewCodeBlockCollection(blocks)
+}
+
+func ParseFile(file *os.File) CodeBlockCollection {
+	return Parse(bufio.NewReader(file))
+}
+
+func ParsePath(path string) CodeBlockCollection {
+	file, err := os.Open(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	return ParseFile(file)
+}
+
+func ParseString(text string) CodeBlockCollection {
+	return Parse(bufio.NewReader(strings.NewReader(text)))
 }
