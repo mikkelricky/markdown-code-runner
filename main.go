@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/rimi-itk/go-markdown-code-runner/codeblock"
+	"github.com/mikkelricky/go-markdown-code-runner/codeblock"
 )
 
 func main() {
