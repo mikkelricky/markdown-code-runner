@@ -49,3 +49,9 @@ find ~ -type f
 task format
 task test
 ```
+
+### Coding standards
+
+```shell name=coding-standards-markdown
+task dev:coding-standards:check
+```

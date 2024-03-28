@@ -28,3 +28,12 @@ tasks:
     cmds:
       - ./go-markdown-code-runner README.md
     # silent: true
+
+  dev:coding-standards:check:
+    cmds:
+      - task: dev:coding-standards:apply
+      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '*.md' docs/
+
+  dev:coding-standards:apply:
+    cmds:
+      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md '*.md' docs/ --fix
