@@ -13,7 +13,7 @@ type CodeBlock struct {
 	attributes map[string]string
 }
 
-func New(infoString string) CodeBlock {
+func NewCodeBlock(infoString string) CodeBlock {
 	r := regexp.MustCompile("^(?P<language>[^ ]+)(?: +(?P<attributes>.+))?")
 	match := r.FindStringSubmatch(strings.TrimSpace(infoString))
 
