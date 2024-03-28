@@ -2,13 +2,10 @@
 
 version: '3'
 
-vars:
-  MAIN: main.go
-
 tasks:
   run:
     cmds:
-      - go run "{{.MAIN}}" "{{.CLI_ARGS}}"
+      - go run ./main.go
     # silent: true
 
   build:
