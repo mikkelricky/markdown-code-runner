@@ -1,7 +1,12 @@
 # Markdown code runner
 
+Build
+
 ```shell
-pwd
-date
-ls
+task build
+```
+
+``` shell name=test
+task format
+task test
 ```
