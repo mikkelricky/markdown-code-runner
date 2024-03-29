@@ -95,7 +95,15 @@ var (
 	show       string
 	echo       string
 	collection codeblock.CodeBlockCollection
-	mainScript = "go run github.com/mikkelricky/go-markdown-code-runner@latest"
+	mainScript = func() string {
+		// 	If the app is run with `go run`, the executable will (probably) be in the temporary folder.
+		if executable, err := os.Executable(); err == nil && !strings.HasPrefix(executable, os.TempDir()) {
+			// We think that we're not being run with `go run`.
+			return os.Args[0]
+		}
+
+		return "go run github.com/mikkelricky/go-markdown-code-runner@latest"
+	}()
 
 	// rootCmd represents the base command when called without any subcommands
 	rootCmd = &cobra.Command{
