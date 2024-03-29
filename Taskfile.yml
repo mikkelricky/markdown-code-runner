@@ -3,7 +3,7 @@
 version: '3'
 
 vars:
-  MAIN: go-markdown-code-runner.go
+  MAIN: main.go
 
 tasks:
   run:
@@ -14,7 +14,7 @@ tasks:
   build:
     cmds:
       - task: format
-      - go build "{{.MAIN}}"
+      - go build
     # silent: true
 
   format:
