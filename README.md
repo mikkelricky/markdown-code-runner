@@ -2,8 +2,10 @@
 
 ## Usage
 
+[Install Go](https://go.dev/doc/install) and run
+
 ``` shell
-go-markdown-code-runner [options] [filename]
+go run github.com/rimi-itk/go-markdown-code-runner@latest [options] [filename]
 ```
 
 If no `filename` is specified, `README.md` is used.
@@ -11,7 +13,13 @@ If no `filename` is specified, `README.md` is used.
 List all code block (in `README.md`):
 
 ``` shell
-go-markdown-code-runner
+go run github.com/rimi-itk/go-markdown-code-runner@latest
+```
+
+Show how to run a block:
+
+``` shell
+go run github.com/rimi-itk/go-markdown-code-runner@latest --verbose
 ```
 
 ## Development
