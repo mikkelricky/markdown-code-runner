@@ -1,27 +1,32 @@
 package codeblock
 
 import (
-	"bytes"
+	"fmt"
+	"log"
 	"regexp"
 	"strings"
 )
 
 type CodeBlock struct {
-	infoString string
-	content    []string
-	language   string
-	attributes map[string]string
+	infoString     string
+	content        []string
+	language       string
+	attributes     map[string]string
+	codeBlockStart string
+	codeBlockEnd   string
 }
 
-func NewCodeBlock(infoString string) CodeBlock {
+func NewCodeBlock(codeBlockStart string, content []string, codeBlockEnd string) CodeBlock {
+	match := codeBlockStartPattern.FindStringSubmatch(codeBlockStart)
+	if len(match) < 2 {
+		log.Fatalf("invalid code block start: %s", codeBlockStart)
+	}
+	infoString := match[2]
+
 	r := regexp.MustCompile("^(?P<language>[^ ]+)(?: +(?P<attributes>.+))?")
-	match := r.FindStringSubmatch(strings.TrimSpace(infoString))
+	match = r.FindStringSubmatch(strings.TrimSpace(infoString))
 
 	language := match[1]
-	if language == "sh" {
-		language = "shell"
-	}
-
 	attributes := map[string]string{}
 
 	if len(match[2]) > 0 {
@@ -33,28 +38,17 @@ func NewCodeBlock(infoString string) CodeBlock {
 	}
 
 	return CodeBlock{
-		infoString: infoString,
-		content:    make([]string, 0),
-		language:   language,
-		attributes: attributes,
+		infoString,
+		content,
+		language,
+		attributes,
+		codeBlockStart,
+		codeBlockEnd,
 	}
 }
 
 func (block CodeBlock) String() string {
-	var b bytes.Buffer
-	b.WriteString("```")
-	b.WriteString(block.language)
-	for name, value := range block.GetAttributes() {
-		b.WriteString(" ")
-		b.WriteString(name)
-		b.WriteString("=")
-		b.WriteString(value)
-	}
-	b.WriteString("\n")
-	b.WriteString(block.GetContent())
-	b.WriteString("```\n")
-
-	return b.String()
+	return fmt.Sprintf("%s\n%s%s\n", block.codeBlockStart, block.GetContent(), block.codeBlockEnd)
 }
 
 func (block CodeBlock) GetLanguage() string {

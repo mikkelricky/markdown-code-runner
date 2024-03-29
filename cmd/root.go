@@ -16,7 +16,7 @@ import (
 const defaultFilename = "README.md"
 
 func showCollection() {
-	fmt.Printf("%d block(s) found\n", collection.Len())
+	fmt.Printf("%d block(s) found\n", len(collection.Blocks()))
 
 	for index := range collection.Blocks() {
 		if index > 0 {
@@ -84,7 +84,7 @@ func executeBlock() {
 		"echo":    echo,
 		"verbose": strconv.FormatBool(verbose),
 	}
-	if err := block.Execute(options); err != nil {
+	if _, err := block.Execute(options); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -114,16 +114,22 @@ var (
 		// Uncomment the following line if your bare application
 		// has an action associated with it:
 		Run: func(cmd *cobra.Command, args []string) {
+			var err error
 			fi, _ := os.Stdin.Stat()
-
 			if (fi.Mode() & os.ModeCharDevice) == 0 {
-				collection = codeblock.Parse(bufio.NewReader(os.Stdin))
+				collection, err = codeblock.ParseReader(bufio.NewReader(os.Stdin))
+				if err != nil {
+					log.Fatal(err)
+				}
 			} else {
 				filename := defaultFilename
 				if len(args) == 1 {
 					filename = args[0]
 				}
-				collection = codeblock.ParsePath(filename)
+				collection, err = codeblock.ParsePath(filename)
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
 
 			if execute != "" {

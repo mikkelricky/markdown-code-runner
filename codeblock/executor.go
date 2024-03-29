@@ -2,7 +2,6 @@ package codeblock
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -12,6 +11,7 @@ import (
 )
 
 var languageAliases = map[string][]string{
+	"php":   {},
 	"shell": {"sh", "bash"},
 }
 
@@ -28,16 +28,20 @@ var allLanguages = func() map[string]string {
 	return languages
 }()
 
-func getShellCommand(language string) (string, error) {
+func getShellCommand(language string) (string, []string, error) {
 	switch language {
+	case "php":
+		return "php", []string{}, nil
+
 	case "shell":
-		return "sh", nil
+		return "bash", []string{}, nil
+
 	default:
-		return "", fmt.Errorf("cannot get shell command for language %s", language)
+		return "", []string{}, fmt.Errorf("cannot get shell command for language %s", language)
 	}
 }
 
-func (block CodeBlock) Execute(options map[string]string) error {
+func (block CodeBlock) Execute(options map[string]string) (string, error) {
 	verbose, _ := strconv.ParseBool(options["verbose"])
 	echo := options["echo"]
 	language := allLanguages[block.GetLanguage()]
@@ -46,13 +50,38 @@ func (block CodeBlock) Execute(options map[string]string) error {
 		fmt.Printf("Executing code block\n\n%s\n", block)
 	}
 
+	cmd, args, err := getShellCommand(language)
+	if err != nil {
+		return "", err
+	}
+
+	execute := func(args []string) (string, error) {
+		cmdLine := strings.Join([]string{cmd, shellescape.QuoteCommand(args)}, " ")
+
+		return script.Exec(cmdLine).WithStderr(os.Stderr).Tee().String()
+	}
+
 	switch language {
-	case "shell":
-		cmd, err := getShellCommand(language)
-		if err != nil {
-			log.Fatal(err)
+	case "php":
+		code := block.GetContent()
+		if !strings.Contains(code, "<?php") {
+			code = "<?php\n" + code
 		}
-		args := []string{}
+		file, err := os.CreateTemp("", "code-runner-php")
+		if err != nil {
+			return "", err
+		}
+		defer os.Remove(file.Name())
+
+		_, err = file.WriteString(code)
+		if err != nil {
+			return "", err
+		}
+
+		args = append(args, "-f", file.Name())
+		return execute(args)
+
+	case "shell":
 		if len(echo) > 0 {
 			args = append(args, "-x")
 			// @see `-x` on https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
@@ -60,13 +89,9 @@ func (block CodeBlock) Execute(options map[string]string) error {
 			os.Setenv("PS4", echo)
 		}
 		args = append(args, "-c", block.GetContent())
-
-		cmdLine := strings.Join([]string{cmd, shellescape.QuoteCommand(args)}, " ")
-		script.Exec(cmdLine).WithStderr(os.Stderr).Stdout()
-
-		return nil
+		return execute(args)
 
 	default:
-		return fmt.Errorf("cannot handle language %s", block.GetLanguage())
+		return "", fmt.Errorf("cannot handle language %s", block.GetLanguage())
 	}
 }
