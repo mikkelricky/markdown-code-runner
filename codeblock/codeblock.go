@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -87,6 +88,7 @@ func (block *CodeBlock) AddLine(line string) {
 }
 
 func (block CodeBlock) Execute(options map[string]string) error {
+	verbose, _ := strconv.ParseBool(options["verbose"])
 	language := languages[block.language]
 	if language == "" {
 		language = block.language
@@ -94,6 +96,9 @@ func (block CodeBlock) Execute(options map[string]string) error {
 
 	switch language {
 	case "shell":
+		if verbose {
+			fmt.Printf("Executing code block\n\n%s\n", block)
+		}
 		// https://blog.kowalczyk.info/article/wOYk/advanced-command-execution-in-go-with-osexec.html
 		args := []string{"-c", block.GetContent()}
 		env := os.Environ()
@@ -120,25 +125,26 @@ func (block CodeBlock) Execute(options map[string]string) error {
 			log.Fatal(err)
 		}
 
-		scanner := bufio.NewScanner(stdout)
-		for scanner.Scan() {
-			m := scanner.Text()
-			fmt.Println(m)
+		stdoutScanner := bufio.NewScanner(stdout)
+		go func() {
+			for stdoutScanner.Scan() {
+				m := stdoutScanner.Text()
+				fmt.Println(m)
+			}
+		}()
+
+		stderrScanner := bufio.NewScanner(stderr)
+		go func() {
+			for stderrScanner.Scan() {
+				m := stderrScanner.Text()
+				fmt.Println(m)
+			}
+		}()
+
+		err = cmd.Wait()
+		if err != nil {
+			log.Fatal(err)
 		}
-
-		scannerErr := bufio.NewScanner(stderr)
-		for scannerErr.Scan() {
-			m := scannerErr.Text()
-			fmt.Println(m)
-		}
-
-		cmd.Wait()
-
-		// stdoutStderr, err := cmd.CombinedOutput()
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// fmt.Printf("%s", stdoutStderr)
 
 		return nil
 
