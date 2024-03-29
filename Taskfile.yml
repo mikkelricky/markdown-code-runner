@@ -1,0 +1,22 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  MAIN: go-markdown-code-runner.go
+
+tasks:
+  run:
+    cmds:
+      - go run "{{.MAIN}}"
+    silent: true
+
+  build:
+    cmds:
+      - go build "{{.MAIN}}"
+    silent: true
+
+  format:
+    cmds:
+      - go fmt *.go
+    silent: true
