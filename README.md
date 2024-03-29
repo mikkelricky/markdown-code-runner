@@ -2,13 +2,22 @@
 
 Show and run [fenced code blocks](https://github.github.com/gfm/#fenced-code-blocks) in Markdown files.
 
+## Support languages
+
+* `bash`
+* `php`
+* `shell`, `sh` (will be run with `bash`)
+* `zsh`
+
 ## Quick start
 
 Assuming [Go is installed](https://go.dev/doc/install), you can run a quick test with
 
 ``` shell
-go run github.com/mikkelricky/go-markdown-code-runner@latest help
+go run github.com/mikkelricky/go-markdown-code-runner@latest show
 ```
+
+to list all code blocks in `README.md` in the current folder.
 
 ## Installation
 
@@ -37,6 +46,64 @@ Add `~/go/bin` to your `PATH`, e.g.
 ``` zsh
 # ~/.zshrc
 export PATH=$PATH:$HOME/go/bin
+```
+
+See [Completions](#completions) for details in how to set up completions for your terminal.
+
+## Usage
+
+``` shell
+go-markdown-code-runner [options] [filename]
+```
+
+If no `filename` is specified, input is read from `stdin` or `README.md` is used.
+
+Show all code block (in `README.md`):
+
+``` shell name=list
+go-markdown-code-runner show
+```
+
+Show how to run blocks:
+
+``` shell name=list-verbose
+go-markdown-code-runner show --verbose
+```
+
+Show a single block:
+
+``` shell name=show-single
+# By name, i.e. a code block with name=coding-standards-markdown
+go-markdown-code-runner show --verbose coding-standards-markdown
+# By index
+go-markdown-code-runner show --verbose 5
+```
+
+Run a block:
+
+``` shell name=run
+# Run the block with name "test"
+go-markdown-code-runner run example
+```
+
+Highlight the commands being run:
+
+``` shell name=run-echo
+go-markdown-code-runner run example --echo '\n👉 '
+```
+
+(internally `--echo` uses [`PS4`](<https://www.gnu.org/software/bash/manual/bash.html#index-PS4>))
+
+It works with both `stdout` and `stderr`:
+
+``` shell
+go-markdown-code-runner run example-streams
+
+# Silence stdout
+go-markdown-code-runner run example-streams > /dev/null
+
+# Silence stderr
+go-markdown-code-runner run example-streams 2&> /dev/null
 ```
 
 ### Completions
@@ -70,114 +137,43 @@ And if you're even cooler, you use `go-markdown-code-runner` to run the code sni
 go-markdown-code-runner run zshrc-install-completion --verbose
 ```
 
-## Usage
+## Examples
 
-``` shell
-go-markdown-code-runner [options] [filename]
-```
-
-If no `filename` is specified, input is read from `stdin` or `README.md` is used.
-
-Show all code block (in `README.md`):
-
-``` shell name=list
-go-markdown-code-runner show
-```
-
-Show how to run blocks:
-
-``` shell name=list-verbose
-go-markdown-code-runner show --verbose
-```
-
-Show a single block:
-
-``` shell name=show-single
-# By name
-go-markdown-code-runner show --verbose coding-standards-markdown
-# By index
-go-markdown-code-runner show --verbose 5
-```
-
-Run a block:
-
-``` shell name=run
-# Run the block with name "test"
-go-markdown-code-runner run test
-```
-
-Highlight the commands being run:
-
-``` shell name=run-echo
-go-markdown-code-runner run test --echo '👉 '
-```
-
-(internally `--echo` uses [`PS4`](<https://www.gnu.org/software/bash/manual/bash.html#index-PS4>))
-
-It works with both `stdout` and `stderr`:
-
-``` shell
-# Silence stdout
-go-markdown-code-runner run test > /dev/null
-
-# Silence stderr
-go-markdown-code-runner run test 2&> /dev/null
-```
-
-## Development
-
-```shell name=build
-task build
-```
-
-## Test
-
-``` shell name=test
-pwd
-(>&2 echo FEJL)
+```shell name=example
 date
 pwd
-for i in {0..10}; do
-    (>&2 echo FEJL $i)
-    date
-done
 ```
 
-``` shell name=long-running-test
-find ~ -type f
+```shell name=example-shell
+echo "$0"
 ```
 
-``` php a=b c=d
-task format
-task test
+```bash name=example-bash
+echo "$0"
 ```
 
-### Coding standards
-
-```shell name=coding-standards-markdown
-task dev:coding-standards:check
+```zsh name=example-zsh
+echo "$0"
 ```
 
-```shell name=tty-test
-docker run --interactive --rm --volume ${PWD}:/app itkdev/php8.1-fpm:latest pwd
+```php name=example-php
+<?php
+
+echo PHP_VERSION, PHP_EOL;
 ```
 
-``` shell name=curl
-curl "https://httpbin.org/anything" --header "content-type: application/json" --data @- <<'BODY'
-[1,2,3]
-BODY
+``` shell name=example-streams
+echo "This is written on stdout"
+(>&2 echo "This is written on stderr")
 ```
 
-``` shell name=empty
-```
-
-```php name=php
+```php name=example-php
 <?php
 
 echo (new DateTimeImmutable())->format(DateTimeInterface::ATOM);
 ```
 
-```php name=php-html
+```php name=-example-php-html
 <html>
   <title><?php echo (new DateTimeImmutable())->format(DateTimeInterface::ATOM); ?></title>
 </html>
