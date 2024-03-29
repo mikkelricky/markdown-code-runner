@@ -1,30 +1,15 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/rimi-itk/go-markdown-code-runner/codeblock"
 )
-
-func findBlock(blocks []codeblock.CodeBlock, id string) (*codeblock.CodeBlock, error) {
-	blockIndex, err := strconv.Atoi(id)
-	if err != nil {
-		blockIndex = -1
-	}
-	for index, block := range blocks {
-		if index == blockIndex || id == block.GetName() {
-			return &block, nil
-		}
-	}
-	return nil, fmt.Errorf("cannot find block with id %s", id)
-}
 
 func main() {
 	var id string
@@ -43,18 +28,10 @@ func main() {
 		filename = args[0]
 	}
 
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
+	collection := codeblock.ParsePath(filename)
 
-	defer file.Close()
-
-	reader := bufio.NewReader(file)
-	blocks := codeblock.Parse(reader)
-
-	if len(id) > 0 {
-		block, err := findBlock(blocks, id)
+	if id != "" {
+		block, err := collection.Get(id)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -71,13 +48,13 @@ func main() {
 			fmt.Print(block)
 		}
 	} else {
-		fmt.Printf("%d block(s) found\n", len(blocks))
+		fmt.Printf("%d block(s) found\n", collection.Len())
 
 		headerTransformer := text.Transformer(func(val interface{}) string {
 			return text.Bold.Sprint(val)
 		})
 
-		for index, block := range blocks {
+		for index, block := range collection.Blocks() {
 			name := block.GetName()
 
 			header := fmt.Sprintf("#%d", index)
