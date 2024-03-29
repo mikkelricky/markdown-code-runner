@@ -78,7 +78,7 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int) e
 
 	if verbose {
 		fmt.Println()
-		fmt.Println("Execute this block:")
+		fmt.Println("Run this block:")
 		fmt.Println()
 
 		if name == "" {
@@ -86,7 +86,7 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int) e
 		}
 		cmd := []string{
 			mainScript,
-			"execute",
+			"run",
 			name,
 		}
 		fmt.Printf("%s\n", strings.Join(cmd, " "))
