@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/mikkelricky/go-markdown-code-runner/codeblock"
@@ -38,12 +37,11 @@ Examples:
 `, appName, mainScript),
 		Run: func(cmd *cobra.Command, args []string) {
 			collection, err := readCollection()
-			if err != nil {
-				log.Fatal(err)
-			}
+			check(err)
 
 			for _, arg := range args {
-				executeBlock(*collection, arg)
+				_, err = executeBlock(*collection, arg)
+				check(err)
 			}
 		},
 	}

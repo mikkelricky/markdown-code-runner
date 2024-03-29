@@ -3,7 +3,6 @@ package cmd
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -51,10 +50,10 @@ var headerTransformer = text.Transformer(func(val interface{}) string {
 	return text.Bold.Sprint(val)
 })
 
-func showBlock(collection codeblock.CodeBlockCollection, id string, index int) {
+func showBlock(collection codeblock.CodeBlockCollection, id string, index int) error {
 	block, err := collection.Get(id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	name := block.GetName()
@@ -93,6 +92,8 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int) {
 		fmt.Printf("%s\n", strings.Join(cmd, " "))
 	}
 	fmt.Println()
+
+	return nil
 }
 
 // showCmd represents the show command
@@ -112,13 +113,12 @@ Examples:
 
 		Run: func(cmd *cobra.Command, args []string) {
 			collection, err := readCollection()
-			if err != nil {
-				log.Fatal(err)
-			}
+			check(err)
 
 			if len(args) > 0 {
 				for _, arg := range args {
-					showBlock(*collection, arg, -1)
+					err = showBlock(*collection, arg, -1)
+					check(err)
 				}
 			} else {
 				showCollection(*collection)

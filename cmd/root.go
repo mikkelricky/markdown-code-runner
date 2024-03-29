@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"log"
 	"os"
 	"strings"
 
@@ -9,6 +10,12 @@ import (
 
 const appName = "go-markdown-code-runner"
 const defaultFilename = "README.md"
+
+func check(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 
 var (
 	verbose  bool
