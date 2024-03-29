@@ -1,6 +1,6 @@
 module go-markdown-code-runner
 
-go 1.22.1
+go 1.22
 
 require github.com/jedib0t/go-pretty/v6 v6.5.6
 
