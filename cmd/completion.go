@@ -1,9 +1,7 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -12,8 +10,17 @@ import (
 
 // completionCmd represents the completion command
 var completionCmd = &cobra.Command{
-	Use:       "completion",
-	Short:     "Generate completions",
+	Use:   "completion [shell]",
+	Short: fmt.Sprintf("Generate completions for %[1]s", appName),
+	Long: fmt.Sprintf(`Generate shell completions for %[1]s.
+
+Examples:
+
+%[2]s completion bash
+%[2]s completion fish
+%[2]s completion powershell
+%[2]s completion zsh
+`, appName, mainScript),
 	ValidArgs: []string{"bash", "fish", "powershell", "zsh"},
 	Args:      cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -39,14 +46,4 @@ var completionCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(completionCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// completionCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// completionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
