@@ -4,13 +4,13 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"go-markdown-code-runner/codeblock"
 	"log"
 	"os"
 	"strconv"
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/text"
+	"github.com/rimi-itk/go-markdown-code-runner/codeblock"
 )
 
 func findBlock(blocks []codeblock.CodeBlock, id string) (*codeblock.CodeBlock, error) {
