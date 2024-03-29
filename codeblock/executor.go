@@ -41,13 +41,13 @@ func getShellCommand(language string) (string, []string, error) {
 	}
 }
 
-func (block CodeBlock) Execute(options map[string]string) (string, error) {
+func (block CodeBlock) Run(options map[string]string) (string, error) {
 	verbose, _ := strconv.ParseBool(options["verbose"])
 	echo := options["echo"]
 	language := allLanguages[block.GetLanguage()]
 
 	if verbose {
-		fmt.Printf("Executing code block\n\n%s\n", block)
+		fmt.Printf("Running code block\n\n%s\n", block)
 	}
 
 	cmd, args, err := getShellCommand(language)
@@ -55,7 +55,7 @@ func (block CodeBlock) Execute(options map[string]string) (string, error) {
 		return "", err
 	}
 
-	execute := func(args []string) (string, error) {
+	run := func(args []string) (string, error) {
 		cmdLine := strings.Join([]string{cmd, shellescape.QuoteCommand(args)}, " ")
 
 		return script.Exec(cmdLine).WithStderr(os.Stderr).Tee().String()
@@ -79,7 +79,7 @@ func (block CodeBlock) Execute(options map[string]string) (string, error) {
 		}
 
 		args = append(args, "-f", file.Name())
-		return execute(args)
+		return run(args)
 
 	case "shell":
 		if len(echo) > 0 {
@@ -89,7 +89,7 @@ func (block CodeBlock) Execute(options map[string]string) (string, error) {
 			os.Setenv("PS4", echo)
 		}
 		args = append(args, "-c", block.GetContent())
-		return execute(args)
+		return run(args)
 
 	default:
 		return "", fmt.Errorf("cannot handle language %s", block.GetLanguage())

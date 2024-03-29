@@ -64,10 +64,10 @@ eval "$(go-markdown-code-runner completion zsh)"; compdef _go-markdown-code-runn
 EOF
 ```
 
-And if you're even cooler, you use `go-markdown-code-runner` to execute the code snippet above by its name:
+And if you're even cooler, you use `go-markdown-code-runner` to run the code snippet above by its name:
 
 ``` shell
-go-markdown-code-runner execute zshrc-install-completion --verbose
+go-markdown-code-runner run zshrc-install-completion --verbose
 ```
 
 ## Usage
@@ -99,17 +99,17 @@ go-markdown-code-runner show --verbose coding-standards-markdown
 go-markdown-code-runner show --verbose 5
 ```
 
-Execute a block:
+Run a block:
 
-``` shell name=execute
-# Execute the block with name "test"
-go-markdown-code-runner execute test
+``` shell name=run
+# Run the block with name "test"
+go-markdown-code-runner run test
 ```
 
 Highlight the commands being run:
 
-``` shell name=execute-echo
-go-markdown-code-runner execute test --echo '👉 '
+``` shell name=run-echo
+go-markdown-code-runner run test --echo '👉 '
 ```
 
 (internally `--echo` uses [`PS4`](<https://www.gnu.org/software/bash/manual/bash.html#index-PS4>))
@@ -118,10 +118,10 @@ It works with both `stdout` and `stderr`:
 
 ``` shell
 # Silence stdout
-go-markdown-code-runner execute test > /dev/null
+go-markdown-code-runner run test > /dev/null
 
 # Silence stderr
-go-markdown-code-runner execute test 2&> /dev/null
+go-markdown-code-runner run test 2&> /dev/null
 ```
 
 ## Development
