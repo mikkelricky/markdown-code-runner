@@ -153,8 +153,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
-	rootCmd.PersistentFlags().StringVarP(&show, "show", "s", "", "name or index of a code block to show")
-	rootCmd.PersistentFlags().StringVarP(&execute, "execute", "e", "", "name or index of a code block to execute")
-	rootCmd.PersistentFlags().StringVarP(&echo, "echo", "", "", "echo shell statements and prepend with the value of this flag, e.g. --echo='> '")
+	rootCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
+	rootCmd.Flags().StringVarP(&show, "show", "s", "", "name or index of a code block to show")
+	rootCmd.Flags().StringVarP(&execute, "execute", "e", "", "name or index of a code block to execute")
+	rootCmd.Flags().StringVarP(&echo, "echo", "", "", "echo shell statements and prepend with the value of this flag, e.g. --echo='> '")
 }
