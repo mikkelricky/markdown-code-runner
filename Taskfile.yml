@@ -8,15 +8,23 @@ vars:
 tasks:
   run:
     cmds:
-      - go run "{{.MAIN}}"
-    silent: true
+      - go run "{{.MAIN}}" "{{.CLI_ARGS}}"
+    # silent: true
 
   build:
     cmds:
+      - task: format
       - go build "{{.MAIN}}"
-    silent: true
+    # silent: true
 
   format:
     cmds:
       - go fmt *.go
-    silent: true
+    # silent: true
+
+  test:
+    deps:
+      - build
+    cmds:
+      - ./go-markdown-code-runner README.md
+    # silent: true
