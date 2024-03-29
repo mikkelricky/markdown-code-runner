@@ -1,45 +1,97 @@
 # Markdown code runner
 
-## Usage
+Show and run [fenced code blocks](https://github.github.com/gfm/#fenced-code-blocks) in Markdown files.
 
-[Install Go](https://go.dev/doc/install) and run
+## Quick start
+
+Assuming [Go is installed](https://go.dev/doc/install), you can run a quick test with
 
 ``` shell
-go run github.com/mikkelricky/go-markdown-code-runner@latest [options] [filename]
+go run github.com/mikkelricky/go-markdown-code-runner@latest help
+```
+
+## Installation
+
+[Install Go](https://go.dev/doc/install) and install `go-markdown-code-runner` with
+
+``` shell
+go install github.com/mikkelricky/go-markdown-code-runner@latest
+```
+
+See [Compile and install packages and
+dependencies](https://pkg.go.dev/cmd/go#hdr-Compile_and_install_packages_and_dependencies) for details on where
+`go-markdown-code-runner` is actually installed.
+
+To set things straight and clean up, it may be worth running these commands:
+
+``` shell
+# Create the default installation location
+mkdir -p ~/go/bin
+# Clear GOBIN to use the default installation location
+go env -w GOBIN=''
+go install github.com/mikkelricky/go-markdown-code-runner@latest
+```
+
+Add `~/go/bin` to your `PATH`, e.g.
+
+``` zsh
+# ~/.zshrc
+export PATH=$PATH:$HOME/go/bin
+```
+
+### Completions
+
+Run
+
+``` shell
+go-markdown-code-runner completion zsh
+```
+
+#### Zsh
+
+``` zsh
+# ~/.zshrc
+eval "$(go-markdown-code-runner completion zsh)"; compdef _go-markdown-code-runner go-markdown-code-runner
+```
+
+``` shell
+go-markdown-code-runner [options] [filename]
 ```
 
 If no `filename` is specified, input is read from `stdin` or `README.md` is used.
 
-List all code block (in `README.md`):
+Show all code block (in `README.md`):
 
 ``` shell name=list
-go run github.com/mikkelricky/go-markdown-code-runner@latest
+go-markdown-code-runner show
 ```
 
 Show how to run blocks:
 
 ``` shell name=list-verbose
-go run github.com/mikkelricky/go-markdown-code-runner@latest --verbose
+go-markdown-code-runner show --verbose
 ```
 
 Show a single block:
 
 ``` shell name=show-single
-go run github.com/mikkelricky/go-markdown-code-runner@latest --verbose --show 5
-go run github.com/mikkelricky/go-markdown-code-runner@latest --verbose --show coding-standards-markdown
+# By name
+go-markdown-code-runner show --verbose coding-standards-markdown
+# By index
+go-markdown-code-runner show --verbose 5
 ```
 
 Execute a block:
 
 ``` shell name=execute
 # Execute the block with name "test"
-go run github.com/mikkelricky/go-markdown-code-runner@latest --execute test
+go-markdown-code-runner execute test
 ```
 
 Highlight the commands being run:
 
 ``` shell name=execute-echo
-go run github.com/mikkelricky/go-markdown-code-runner@latest --execute test --echo '👉 '
+go-markdown-code-runner execute test --echo '👉 '
 ```
 
 (internally `--echo` uses [`PS4`](<https://www.gnu.org/software/bash/manual/bash.html#index-PS4>))
@@ -48,10 +100,10 @@ It works with both `stdout` and `stderr`:
 
 ``` shell
 # Silence stdout
-go run github.com/mikkelricky/go-markdown-code-runner@latest --execute test > /dev/null
+go-markdown-code-runner execute test > /dev/null
 
 # Silence stderr
-go run github.com/mikkelricky/go-markdown-code-runner@latest --execute test 2&> /dev/null
+go-markdown-code-runner execute test 2&> /dev/null
 ```
 
 ## Development
