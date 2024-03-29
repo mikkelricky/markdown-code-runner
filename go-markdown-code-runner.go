@@ -4,9 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"go-markdown-code-runner/codeblock"
-	"io"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -32,37 +30,7 @@ func main() {
 	defer file.Close()
 
 	reader := bufio.NewReader(file)
-
-	var blocks []codeblock.CodeBlock
-
-	// https://github.github.com/gfm/#fenced-code-blocks
-	codeBlockStart, _ := regexp.Compile("^ {0,3}```(?P<infoString>[^`]+)")
-	codeBlockEnd, _ := regexp.Compile("^ {0,3}```")
-
-	var block codeblock.CodeBlock
-	var inCodeBlock bool = false
-
-	for {
-		l, _, err := reader.ReadLine()
-
-		if err == io.EOF {
-			break
-		}
-
-		line := string(l)
-
-		match := codeBlockStart.FindStringSubmatch(line)
-		if len(match) > 0 {
-			block = codeblock.New(match[1])
-			inCodeBlock = true
-		} else if codeBlockEnd.MatchString(line) {
-			block.AddLine("")
-			blocks = append(blocks, block)
-			inCodeBlock = false
-		} else if inCodeBlock {
-			block.AddLine(line)
-		}
-	}
+	blocks := codeblock.Parse(reader)
 
 	fmt.Printf("%d block(s) found\n", len(blocks))
 	for index, block := range blocks {
