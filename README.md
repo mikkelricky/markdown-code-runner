@@ -8,18 +8,25 @@
 go run github.com/mikkelricky/go-markdown-code-runner@latest [options] [filename]
 ```
 
-If no `filename` is specified, `README.md` is used.
+If no `filename` is specified, input is read from `stdin` or `README.md` is used.
 
 List all code block (in `README.md`):
 
-``` shell
+``` shell name=list
 go run github.com/mikkelricky/go-markdown-code-runner@latest
 ```
 
-Show how to run a block:
+Show how to run blocks:
 
-``` shell
+``` shell name=list-verbose
 go run github.com/mikkelricky/go-markdown-code-runner@latest --verbose
+```
+
+Show a single block:
+
+``` shell name=show-single
+go run github.com/mikkelricky/go-markdown-code-runner@latest --verbose --show 5
+go run github.com/mikkelricky/go-markdown-code-runner@latest --verbose --show coding-standards-markdown
 ```
 
 ## Development
