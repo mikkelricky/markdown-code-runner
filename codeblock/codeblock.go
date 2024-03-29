@@ -151,7 +151,4 @@ func (block CodeBlock) Execute(options map[string]string) error {
 	default:
 		return fmt.Errorf("cannot handle language %s", language)
 	}
-
-	// cmd := exec.Command(block.GetContent())
-	return fmt.Errorf("Error executing block\n\n%s", block)
 }

@@ -11,12 +11,18 @@ tasks:
   build:
     cmds:
       - task: format
+      - task: check
       - go build
     # silent: true
 
   format:
     cmds:
-      - go fmt *.go
+      - go fmt ./...
+    # silent: true
+
+  check:
+    cmds:
+      - go vet ./...
     # silent: true
 
   test:
