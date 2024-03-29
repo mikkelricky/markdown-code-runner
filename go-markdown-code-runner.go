@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strings"
 )
 
 func check(e error) {
@@ -32,6 +33,8 @@ func main() {
 
 	reader := bufio.NewReader(file)
 
+	var blocks []codeblock.CodeBlock
+
 	// https://github.github.com/gfm/#fenced-code-blocks
 	codeBlockStart, _ := regexp.Compile("^ {0,3}```(?P<infoString>[^`]+)")
 	codeBlockEnd, _ := regexp.Compile("^ {0,3}```")
@@ -54,28 +57,25 @@ func main() {
 			inCodeBlock = true
 		} else if codeBlockEnd.MatchString(line) {
 			block.AddLine("")
-			fmt.Print(block)
+			blocks = append(blocks, block)
 			inCodeBlock = false
 		} else if inCodeBlock {
 			block.AddLine(line)
 		}
 	}
 
-	// fmt.Printf("len=%d cap=%d %v\n", len(code), cap(code), code)
-
-	// content, err := os.ReadFile(filename)
-	// check(err)
-	// fmt.Print(string(dat))
-
-	// scanner := bufio.NewScanner(os.Stdin)
-
-	// for scanner.Scan() {
-	//	line := scanner.Text()
-	//	fmt.Println(line)
-	// }
-
-	// if err := scanner.Err(); err != nil {
-	//	fmt.Fprintln(os.Stderr, "error:", err)
-	//	os.Exit(1)
-	// }
+	fmt.Printf("%d block(s) found\n", len(blocks))
+	for index, block := range blocks {
+		fmt.Println()
+		fmt.Println(strings.Repeat("=", 80))
+		fmt.Printf("%d", index)
+		name := block.GetName()
+		if len(name) > 0 {
+			fmt.Printf(": %s\n", name)
+		}
+		fmt.Println()
+		fmt.Println(strings.Repeat("-", 80))
+		fmt.Print(block)
+		fmt.Println(strings.Repeat("=", 80))
+	}
 }

@@ -10,3 +10,8 @@ task build
 task format
 task test
 ```
+
+``` php a=b c=d
+task format
+task test
+```
