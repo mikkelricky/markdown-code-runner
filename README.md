@@ -41,18 +41,36 @@ export PATH=$PATH:$HOME/go/bin
 
 ### Completions
 
-Run
+`go-markdown-code-runner` can automatically generate completions for four shells:
 
-``` shell
-go-markdown-code-runner completion zsh
+``` shell name=completion-help
+go-markdown-code-runner help completion
 ```
 
 #### Zsh
+
+Load completions in [Zsh](https://en.wikipedia.org/wiki/Z_shell) by adding
 
 ``` zsh
 # ~/.zshrc
 eval "$(go-markdown-code-runner completion zsh)"; compdef _go-markdown-code-runner go-markdown-code-runner
 ```
+
+to your `~/.zshrc`. If you're cool, you do it all from the command line:
+
+``` shell name=zshrc-install-completion
+cat >> ~/.zshrc <<'EOF'
+eval "$(go-markdown-code-runner completion zsh)"; compdef _go-markdown-code-runner go-markdown-code-runner
+EOF
+```
+
+And if you're even cooler, you use `go-markdown-code-runner` to execute the code snippet above by its name:
+
+``` shell
+go-markdown-code-runner execute zshrc-install-completion --verbose
+```
+
+## Usage
 
 ``` shell
 go-markdown-code-runner [options] [filename]
