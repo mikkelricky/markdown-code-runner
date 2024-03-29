@@ -12,6 +12,7 @@ tasks:
     cmds:
       - task: format
       - task: check
+      - go mod tidy
       - go build
     # silent: true
 
