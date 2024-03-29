@@ -1,10 +1,12 @@
 {
   "default": true,
-  "MD013": {
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/md013.md
+  "line-length": {
     "line_length": 120,
-    "ignore_code_blocks": true,
+    "code_blocks": false,
     "tables": false
   },
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/md024.md
   "no-duplicate-heading": {
     "siblings_only": true
   }

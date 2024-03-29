@@ -24,10 +24,6 @@ func NewCodeBlockCollection(blocks []CodeBlock) CodeBlockCollection {
 	}
 }
 
-func (collection CodeBlockCollection) Len() int {
-	return len(collection.blocks)
-}
-
 func (collection CodeBlockCollection) Blocks() []CodeBlock {
 	return collection.blocks
 }
@@ -42,7 +38,7 @@ func (collection CodeBlockCollection) Get(id string) (*CodeBlock, error) {
 	if err != nil {
 		index = -1
 	}
-	if 0 <= index && index < collection.Len() {
+	if 0 <= index && index < len(collection.blocks) {
 		return &collection.blocks[index], nil
 	}
 
