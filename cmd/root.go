@@ -36,7 +36,7 @@ var (
 		Use:     os.Args[0],
 		Short:   "Show and run code blocks in Markdown files",
 		Args:    cobra.MatchAll(cobra.MaximumNArgs(1), cobra.OnlyValidArgs),
-		Version: "v0.7.0",
+		Version: "v0.8.0",
 	}
 )
 
