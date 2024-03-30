@@ -24,17 +24,15 @@ func runBlock(collection codeblock.CodeBlockCollection, id string) (string, erro
 var (
 	echo   string
 	runCmd = &cobra.Command{
-		Use:   "run [name...]",
+		Use:   "run name...",
 		Short: "Run code blocks",
-		Long: fmt.Sprintf(`Run one or more code blocks.
-
-Examples:
-
+		Long:  "Run one or more code blocks.",
+		Example: fmt.Sprintf(`
 %[2]s run test
 %[2]s run test --verbose
 %[2]s run test --verbose --file codeblock/testdata/tests.md
-%[2]s run test --verbose --echo '👉 '
-`, appName, mainScript),
+%[2]s run test --verbose --echo '👉 '`, appName, mainScript),
+		Args: cobra.MatchAll(cobra.MinimumNArgs(1), cobra.OnlyValidArgs),
 		Run: func(cmd *cobra.Command, args []string) {
 			collection, err := readCollection()
 			check(err)

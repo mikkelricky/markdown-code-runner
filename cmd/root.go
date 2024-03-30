@@ -33,9 +33,10 @@ var (
 
 	// rootCmd represents the base command when called without any subcommands
 	rootCmd = &cobra.Command{
-		Use:   os.Args[0],
-		Short: "Show and run code blocks in Markdown files",
-		Args:  cobra.MatchAll(cobra.MaximumNArgs(1), cobra.OnlyValidArgs),
+		Use:     os.Args[0],
+		Short:   "Show and run code blocks in Markdown files",
+		Args:    cobra.MatchAll(cobra.MaximumNArgs(1), cobra.OnlyValidArgs),
+		Version: "v0.7.0",
 	}
 )
 
