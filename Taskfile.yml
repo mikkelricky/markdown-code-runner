@@ -30,7 +30,7 @@ tasks:
     deps:
       - build
     cmds:
-      - go test ./...
+      - go test -v ./...
     # silent: true
 
   dev:coding-standards:check:
