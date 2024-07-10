@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const appName = "go-markdown-code-runner"
+const appName = "markdown-code-runner"
 const defaultFilename = "README.md"
 
 func check(err error) {
@@ -28,7 +28,7 @@ var (
 			return os.Args[0]
 		}
 
-		return "go run github.com/mikkelricky/go-markdown-code-runner@latest"
+		return "go run github.com/mikkelricky/markdown-code-runner@latest"
 	}()
 
 	// rootCmd represents the base command when called without any subcommands

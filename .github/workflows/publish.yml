@@ -25,4 +25,4 @@ jobs:
     - name: Publish
       # https://go.dev/doc/modules/publishing
       run: |
-        GOPROXY=proxy.golang.org go list -m "github.com/mikkelricky/go-markdown-code-runner@$GIT_TAG"
+        GOPROXY=proxy.golang.org go list -m "github.com/mikkelricky/markdown-code-runner@$GIT_TAG"

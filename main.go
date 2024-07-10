@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mikkelricky/go-markdown-code-runner/cmd"
+	"github.com/mikkelricky/markdown-code-runner/cmd"
 )
 
 func main() {
