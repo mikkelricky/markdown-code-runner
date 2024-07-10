@@ -1,4 +1,4 @@
-module github.com/mikkelricky/go-markdown-code-runner
+module github.com/mikkelricky/markdown-code-runner
 
 go 1.22
 

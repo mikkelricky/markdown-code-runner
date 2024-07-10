@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/text"
-	"github.com/mikkelricky/go-markdown-code-runner/codeblock"
+	"github.com/mikkelricky/markdown-code-runner/codeblock"
 	"github.com/spf13/cobra"
 )
 

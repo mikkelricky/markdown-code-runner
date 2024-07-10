@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mikkelricky/go-markdown-code-runner/codeblock"
+	"github.com/mikkelricky/markdown-code-runner/codeblock"
 	"github.com/spf13/cobra"
 )
 
