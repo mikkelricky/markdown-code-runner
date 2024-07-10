@@ -4,6 +4,10 @@
 task build
 ```
 
+```shell name=run
+go run ./ show --file docs/DEVELOPMENT.md --verbose
+```
+
 ## Test
 
 ``` shell name=test
