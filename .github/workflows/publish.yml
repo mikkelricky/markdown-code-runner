@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      # https://github.com/devops-infra/action-commit-push?tab=readme-ov-file#reference
+      with:
+        fetch-depth: 0
+        ref: ${{ github.head_ref }}
 
     - name: Set up Go
       uses: actions/setup-go@v5
@@ -24,7 +28,8 @@ jobs:
 
     - name: Set version
       run: |
-        sed -i 's/const version = ".*"/const version="'$GIT_TAG'"/' cmd/root.go
+        sed -i 's/const version = ".*"/const version = "'$GIT_TAG'"/' cmd/root.go
+        git diff
 
     - name: Commit and push changes
       # https://github.com/devops-infra/action-commit-push
@@ -32,6 +37,9 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         amend: true
+        force: true
+        no_edit: true
+        target_branch: main
 
     - name: Publish
       # https://go.dev/doc/modules/publishing
