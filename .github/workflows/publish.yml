@@ -26,20 +26,19 @@ jobs:
       run: |
         echo "GIT_TAG=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
 
-    - name: Set version
-      run: |
-        sed -i 's/const version = ".*"/const version = "'$GIT_TAG'"/' cmd/root.go
-        git diff
+    # - name: Set version
+    #   run: |
+    #     sed -i 's/const version = ".*"/const version = "'$GIT_TAG'"/' cmd/root.go
 
-    - name: Commit and push changes
-      # https://github.com/devops-infra/action-commit-push
-      uses: devops-infra/action-commit-push@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        amend: true
-        force: true
-        no_edit: true
-        target_branch: main
+    # - name: Commit and push changes
+    #   # https://github.com/devops-infra/action-commit-push
+    #   uses: devops-infra/action-commit-push@master
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+    #     amend: true
+    #     force: true
+    #     no_edit: true
+    #     target_branch: main
 
     - name: Publish
       # https://go.dev/doc/modules/publishing

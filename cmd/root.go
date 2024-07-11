@@ -10,7 +10,7 @@ import (
 
 const appName = "markdown-code-runner"
 const defaultFilename = "README.md"
-const version = "v0.8.0"
+const version = "v1.0.1"
 
 func check(err error) {
 	if err != nil {
