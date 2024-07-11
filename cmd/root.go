@@ -10,6 +10,7 @@ import (
 
 const appName = "markdown-code-runner"
 const defaultFilename = "README.md"
+const version = "v0.8.0"
 
 func check(err error) {
 	if err != nil {
@@ -36,7 +37,7 @@ var (
 		Use:     os.Args[0],
 		Short:   "Show and run code blocks in Markdown files",
 		Args:    cobra.MatchAll(cobra.MaximumNArgs(1), cobra.OnlyValidArgs),
-		Version: "v0.8.0",
+		Version: version,
 	}
 )
 

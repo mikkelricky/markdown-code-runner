@@ -86,9 +86,15 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int) e
 		}
 		cmd := []string{
 			mainScript,
-			"run",
-			name,
 		}
+
+		// Global arguments
+		if filename != "" {
+			cmd = append(cmd, "--file", filename)
+		}
+
+		cmd = append(cmd, "run", name)
+
 		fmt.Printf("%s\n", strings.Join(cmd, " "))
 	}
 	fmt.Println()
