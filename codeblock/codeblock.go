@@ -50,3 +50,12 @@ func (block CodeBlock) GetContent() string {
 func (block *CodeBlock) AddLine(line string) {
 	block.content = append(block.content, line)
 }
+
+func (block *CodeBlock) Substitute(substitutions map[string]string) string {
+	content := block.GetContent()
+	for from, to := range substitutions {
+		content = strings.ReplaceAll(content, from, to)
+	}
+
+	return content
+}

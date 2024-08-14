@@ -54,7 +54,7 @@ func getShellCommand(language string) (string, []string, error) {
 	}
 }
 
-func (block CodeBlock) Run(options map[string]string) (string, error) {
+func (block CodeBlock) Run(options map[string]string, substitutions map[string]string) (string, error) {
 	verbose, _ := strconv.ParseBool(options["verbose"])
 	echo := options["echo"]
 	language := allLanguages[block.GetLanguage()]
@@ -74,9 +74,10 @@ func (block CodeBlock) Run(options map[string]string) (string, error) {
 		return script.Exec(cmdLine).WithStderr(os.Stderr).Tee().String()
 	}
 
+	code := block.Substitute(substitutions)
+
 	switch language {
 	case PHP:
-		code := block.GetContent()
 		if !strings.Contains(code, "<?php") {
 			code = "<?php\n" + code
 		}
@@ -101,11 +102,11 @@ func (block CodeBlock) Run(options map[string]string) (string, error) {
 			// @see https://github.com/bitfield/script/issues/80
 			os.Setenv("PS4", echo)
 		}
-		args = append(args, "-c", block.GetContent())
+		args = append(args, "-c", code)
 		return run(args)
 
 	case ZSH:
-		args = append(args, "-c", block.GetContent())
+		args = append(args, "-c", code)
 		return run(args)
 
 	default:

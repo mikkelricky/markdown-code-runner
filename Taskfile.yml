@@ -36,11 +36,11 @@ tasks:
   dev:coding-standards:check:
     cmds:
       - task: dev:coding-standards:apply
-      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md $(git ls-files '*.md')
+      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint '**/*.md'
 
   dev:coding-standards:apply:
     cmds:
-      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint --ignore LICENSE.md $(git ls-files '*.md') --fix
+      - docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint '**/*.md' --fix
 
   release:create:
     prompt: Create release {{.CLI_ARGS}}?
