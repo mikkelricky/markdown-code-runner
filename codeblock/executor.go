@@ -3,11 +3,9 @@ package codeblock
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strconv"
 	"strings"
-
-	"github.com/alessio/shellescape"
-	"github.com/bitfield/script"
 )
 
 const (
@@ -54,7 +52,7 @@ func getShellCommand(language string) (string, []string, error) {
 	}
 }
 
-func (block CodeBlock) Run(options map[string]string, substitutions map[string]string) (string, error) {
+func (block CodeBlock) Run(options map[string]string, substitutions map[string]string) error {
 	verbose, _ := strconv.ParseBool(options["verbose"])
 	echo := options["echo"]
 	language := allLanguages[block.GetLanguage()]
@@ -65,13 +63,16 @@ func (block CodeBlock) Run(options map[string]string, substitutions map[string]s
 
 	cmd, args, err := getShellCommand(language)
 	if err != nil {
-		return "", err
+		return err
 	}
 
-	run := func(args []string) (string, error) {
-		cmdLine := strings.Join([]string{cmd, shellescape.QuoteCommand(args)}, " ")
+	run := func(args []string) error {
+		cmd := exec.Command(cmd, args...)
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
 
-		return script.Exec(cmdLine).WithStderr(os.Stderr).Tee().String()
+		return cmd.Run()
 	}
 
 	code := block.Substitute(substitutions)
@@ -83,13 +84,13 @@ func (block CodeBlock) Run(options map[string]string, substitutions map[string]s
 		}
 		file, err := os.CreateTemp("", "code-runner-php")
 		if err != nil {
-			return "", err
+			return err
 		}
 		defer os.Remove(file.Name())
 
 		_, err = file.WriteString(code)
 		if err != nil {
-			return "", err
+			return err
 		}
 
 		args = append(args, "-f", file.Name())
@@ -110,6 +111,6 @@ func (block CodeBlock) Run(options map[string]string, substitutions map[string]s
 		return run(args)
 
 	default:
-		return "", fmt.Errorf("cannot handle language %s", block.GetLanguage())
+		return fmt.Errorf("cannot handle language %s", block.GetLanguage())
 	}
 }
