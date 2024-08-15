@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/alessio/shellescape"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/mikkelricky/markdown-code-runner/codeblock"
 	"github.com/spf13/cobra"
@@ -33,7 +34,7 @@ func readCollection() (*codeblock.CodeBlockCollection, error) {
 	return &collection, nil
 }
 
-func showCollection(collection codeblock.CodeBlockCollection) {
+func showCollection(collection codeblock.CodeBlockCollection, substitutions map[string]string) {
 	fmt.Printf("%d block(s) found\n", len(collection.Blocks()))
 
 	for index := range collection.Blocks() {
@@ -42,7 +43,7 @@ func showCollection(collection codeblock.CodeBlockCollection) {
 			fmt.Println()
 		}
 
-		showBlock(collection, strconv.Itoa(index), index)
+		showBlock(collection, strconv.Itoa(index), index, substitutions)
 	}
 }
 
@@ -50,7 +51,7 @@ var headerTransformer = text.Transformer(func(val interface{}) string {
 	return text.Bold.Sprint(val)
 })
 
-func showBlock(collection codeblock.CodeBlockCollection, id string, index int) error {
+func showBlock(collection codeblock.CodeBlockCollection, id string, index int, substitutions map[string]string) error {
 	block, err := collection.Get(id)
 	if err != nil {
 		return err
@@ -76,6 +77,14 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int) e
 
 	fmt.Print(block)
 
+	if block.Substitute(substitutions) != block.GetContent() {
+		fmt.Println()
+		fmt.Println("With substitutions")
+		fmt.Println()
+		fmt.Print(block.Substitute(substitutions))
+		fmt.Println()
+	}
+
 	if verbose {
 		fmt.Println()
 		fmt.Println("Run this block:")
@@ -90,10 +99,22 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int) e
 
 		// Global arguments
 		if filename != "" {
-			cmd = append(cmd, "--file", filename)
+			cmd = append(cmd, "--"+ARG_FILENAME, filename)
 		}
 
-		cmd = append(cmd, "run", name)
+		cmd = append(cmd, "run")
+
+		if strings.HasPrefix(name, "-") {
+			if argSubstitutions != "" {
+				cmd = append(cmd, "--"+ARG_SUBSTITUTIONS, shellescape.Quote(argSubstitutions))
+			}
+			cmd = append(cmd, "--", name)
+		} else {
+			cmd = append(cmd, name)
+			if argSubstitutions != "" {
+				cmd = append(cmd, "--"+ARG_SUBSTITUTIONS, shellescape.Quote(argSubstitutions))
+			}
+		}
 
 		fmt.Printf("%s\n", strings.Join(cmd, " "))
 	}
@@ -118,16 +139,17 @@ Examples:
 `, appName, mainScript),
 
 		Run: func(cmd *cobra.Command, args []string) {
+			ParseSubstitutions()
 			collection, err := readCollection()
 			check(err)
 
 			if len(args) > 0 {
 				for _, arg := range args {
-					err = showBlock(*collection, arg, -1)
+					err = showBlock(*collection, arg, -1, substitutions)
 					check(err)
 				}
 			} else {
-				showCollection(*collection)
+				showCollection(*collection, substitutions)
 			}
 		},
 	}

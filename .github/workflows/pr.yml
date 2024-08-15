@@ -85,7 +85,7 @@ jobs:
 
       - name: Coding standards
         run: |
-          docker run --rm --volume "$(pwd):/md" peterdavehello/markdownlint markdownlint --ignore LICENSE.md '*.md' docs/
+          docker run --rm --volume $PWD:/md peterdavehello/markdownlint markdownlint '**/*.md'
 
   # @see https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
   go-build:

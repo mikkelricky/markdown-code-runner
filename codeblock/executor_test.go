@@ -14,7 +14,7 @@ func TestExcecuteBlock(t *testing.T) {
 		"```",
 	)
 	expected := ` sh`
-	actual, err := block.Run(map[string]string{})
+	actual, err := block.Run(map[string]string{}, map[string]string{})
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }

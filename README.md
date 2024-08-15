@@ -106,6 +106,22 @@ markdown-code-runner run example-streams > /dev/null
 markdown-code-runner run example-streams 2&> /dev/null
 ```
 
+### Substitutions
+
+Use `--substitutions` to substitute values before showing or running code:
+
+``` shell
+markdown-code-runner show example-php-substitutions --substitutions '«name»: Mikkel'
+markdown-code-runner run example-php-substitutions --substitutions '«name»: Mikkel'
+```
+
+The substitutions must be a valid YAML mapping mapping a placeholder (e.g. `«name»`) to a value (e.g. `Mikkel`). For
+convenience, use [Flow mappings](https://yaml.org/spec/1.2.2/#742-flow-mappings) for multiple values:
+
+``` shell
+markdown-code-runner run example-php-substitutions --substitutions '{«name»: Mikkel, «number»: 87, }'
+```
+
 ### Completions
 
 `markdown-code-runner` can automatically generate completions for four shells:
@@ -177,4 +193,8 @@ echo (new DateTimeImmutable())->format(DateTimeInterface::ATOM);
 <html>
   <title><?php echo (new DateTimeImmutable())->format(DateTimeInterface::ATOM); ?></title>
 </html>
+```
+
+```php name=example-php-substitutions
+<?php echo "Hello «name»!\n";
 ```

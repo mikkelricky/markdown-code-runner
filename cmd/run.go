@@ -17,7 +17,8 @@ func runBlock(collection codeblock.CodeBlockCollection, id string) (string, erro
 		"echo":    echo,
 		"verbose": strconv.FormatBool(verbose),
 	}
-	return block.Run(options)
+
+	return block.Run(options, substitutions)
 }
 
 // runCmd represents the run command
@@ -34,6 +35,7 @@ var (
 %[2]s run test --verbose --echo '👉 '`, appName, mainScript),
 		Args: cobra.MatchAll(cobra.MinimumNArgs(1), cobra.OnlyValidArgs),
 		Run: func(cmd *cobra.Command, args []string) {
+			ParseSubstitutions()
 			collection, err := readCollection()
 			check(err)
 
