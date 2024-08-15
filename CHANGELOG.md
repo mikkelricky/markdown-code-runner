@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.1.1] - 2024-08-15
+
 * [PR-10](https://github.com/mikkelricky/markdown-code-runner/pull/10)
   Substitutions
 
@@ -15,5 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * [PR-9](https://github.com/mikkelricky/markdown-code-runner/pull/9)
   Added missing global argument in show command
 
-[Unreleased]: https://github.com/mikkelricky/markdown-code-runner/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/mikkelricky/markdown-code-runner/compare/v1.1.1...HEAD
+[v1.1.1]: https://github.com/mikkelricky/markdown-code-runner/compare/v1.0.2...v1.1.1
 [v1.0.2]: https://github.com/mikkelricky/markdown-code-runner/releases/tag/v1.0.2
