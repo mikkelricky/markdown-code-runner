@@ -198,3 +198,15 @@ echo (new DateTimeImmutable())->format(DateTimeInterface::ATOM);
 ```php name=example-php-substitutions
 <?php echo "Hello «name»!\n";
 ```
+
+```bash name=example-bash-interactive
+task test:interactive
+```
+
+```bash name=example-bash-color
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+printf "Roses are ${RED}red${NC}. Voilets are ${BLUE}blue${NC}.\n"
+```

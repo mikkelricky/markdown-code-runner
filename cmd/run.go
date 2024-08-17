@@ -2,16 +2,18 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"os/exec"
 	"strconv"
 
 	"github.com/mikkelricky/markdown-code-runner/codeblock"
 	"github.com/spf13/cobra"
 )
 
-func runBlock(collection codeblock.CodeBlockCollection, id string) (string, error) {
+func runBlock(collection codeblock.CodeBlockCollection, id string) error {
 	block, err := collection.Get(id)
 	if err != nil {
-		return "", err
+		return err
 	}
 	options := map[string]string{
 		"echo":    echo,
@@ -40,8 +42,14 @@ var (
 			check(err)
 
 			for _, arg := range args {
-				_, err = runBlock(*collection, arg)
-				check(err)
+				err = runBlock(*collection, arg)
+				if err != nil {
+					if exitErr, ok := err.(*exec.ExitError); ok {
+						os.Exit(exitErr.ExitCode())
+					} else {
+						check(err)
+					}
+				}
 			}
 		},
 	}

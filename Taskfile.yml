@@ -67,3 +67,9 @@ tasks:
           [ ! $(git tag -l "{{.CLI_ARGS}}") ]
         msg: |
           tag {{.CLI_ARGS}} already exists
+
+  # Used only for testing interactive shell and color output
+  test:interactive:
+    prompt: "Do you relly want to run this task?"
+    cmds:
+      - echo "Ok, task run …"
