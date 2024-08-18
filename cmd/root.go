@@ -12,7 +12,7 @@ import (
 
 const appName = "markdown-code-runner"
 const defaultFilename = "README.md"
-const version = "v1.1.3"
+const version = "v1.1.4"
 const ARG_FILENAME = "file"
 const ARG_SUBSTITUTIONS = "substitutions"
 const ARG_VERBOSE = "verbose"
