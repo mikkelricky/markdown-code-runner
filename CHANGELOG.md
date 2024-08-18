@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+* [PR-13](https://github.com/mikkelricky/markdown-code-runner/pull/13)
+  Added tests for command input and output streams
+
 ## [v1.1.2] - 2024-08-17
 
 * [PR-12](https://github.com/mikkelricky/markdown-code-runner/pull/12)

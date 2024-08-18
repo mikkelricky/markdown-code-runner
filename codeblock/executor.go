@@ -2,6 +2,7 @@ package codeblock
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strconv"
@@ -52,7 +53,7 @@ func getShellCommand(language string) (string, []string, error) {
 	}
 }
 
-func (block CodeBlock) Run(options map[string]string, substitutions map[string]string) error {
+func (block CodeBlock) Run(options map[string]string, substitutions map[string]string, input string) error {
 	verbose, _ := strconv.ParseBool(options["verbose"])
 	echo := options["echo"]
 	language := allLanguages[block.GetLanguage()]
@@ -68,9 +69,24 @@ func (block CodeBlock) Run(options map[string]string, substitutions map[string]s
 
 	run := func(args []string) error {
 		cmd := exec.Command(cmd, args...)
-		cmd.Stdin = os.Stdin
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+
+		if len(input) > 0 {
+			// Pass the input to the command
+			// https://pkg.go.dev/os/exec#Cmd.StdinPipe
+			stdin, err := cmd.StdinPipe()
+			if err != nil {
+				return err
+			}
+
+			go func() {
+				defer stdin.Close()
+				io.WriteString(stdin, input)
+			}()
+		} else {
+			cmd.Stdin = os.Stdin
+		}
 
 		return cmd.Run()
 	}

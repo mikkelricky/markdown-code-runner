@@ -20,7 +20,7 @@ func runBlock(collection codeblock.CodeBlockCollection, id string) error {
 		"verbose": strconv.FormatBool(verbose),
 	}
 
-	return block.Run(options, substitutions)
+	return block.Run(options, substitutions, "")
 }
 
 // runCmd represents the run command
