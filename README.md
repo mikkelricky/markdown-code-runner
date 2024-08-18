@@ -106,6 +106,18 @@ markdown-code-runner run example-streams > /dev/null
 markdown-code-runner run example-streams 2&> /dev/null
 ```
 
+Interactivity also works:
+
+``` shell
+markdown-code-runner run example-bash-interactive
+```
+
+And colored and styled output:
+
+``` shell
+markdown-code-runner run example-bash-color
+```
+
 ### Substitutions
 
 Use `--substitutions` to substitute values before showing or running code:
@@ -209,4 +221,10 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 printf "Roses are ${RED}red${NC}. Voilets are ${BLUE}blue${NC}.\n"
+
+for((i=16; i<256; i++)); do
+    printf "\e[48;5;${i}m%03d" $i;
+    printf '\e[0m';
+    [ ! $((($i - 15) % 6)) -eq 0 ] && printf ' ' || printf '\n'
+done
 ```
