@@ -52,6 +52,32 @@ var (
 				}
 			}
 		},
+		// https://github.com/spf13/cobra/blob/main/site/content/completions/_index.md#dynamic-completion-of-nouns
+		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+			// if len(args) != 0 {
+			// 	return nil, cobra.ShellCompDirectiveNoFileComp
+			// }
+
+			collection, err := readCollection()
+			if err != nil {
+				return nil, cobra.ShellCompDirectiveNoFileComp
+			}
+			blockNames := []string{}
+
+			// @todo Optimize!
+		OUTER:
+			for _, block := range collection.Blocks() {
+				name := block.GetName()
+				for _, arg := range args {
+					if arg == name {
+						continue OUTER
+					}
+				}
+				blockNames = append(blockNames, name)
+			}
+
+			return blockNames, cobra.ShellCompDirectiveNoFileComp
+		},
 	}
 )
 
