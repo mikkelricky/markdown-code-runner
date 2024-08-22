@@ -45,17 +45,11 @@ tasks:
   release:create:
     prompt: Create release {{.CLI_ARGS}}?
     cmds:
-      - |
-        sed -i'' -E 's/(Version: .).*(.,)/\1{{.CLI_ARGS}}\2/' cmd/root.go
+      - gh itkdev changelog add-release {{ .CLI_ARGS }} --base main
+      - sed -i'' -E 's/(const version = ")[^"]+(")/\1{{.CLI_ARGS}}\2/' cmd/root.go
       - git diff
       - task: build
       - git add -- cmd/root.go
-      - git commit -m 'Release {{.CLI_ARGS}}'
-      - git tag "{{.CLI_ARGS}}"
-      - git log --patch-with-stat -1
-      - git push
-      - git push --tags
-      - git log -1
     preconditions:
       - sh: |
           git diff --diff-filter=ACMRT --exit-code
