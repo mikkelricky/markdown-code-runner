@@ -77,5 +77,10 @@ func ParseSubstitutions() {
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, ARG_VERBOSE, "v", false, "verbose output")
 	rootCmd.PersistentFlags().StringVarP(&filename, ARG_FILENAME, "f", defaultFilename, "The file to read code blocks from")
+	// https://github.com/spf13/cobra/blob/main/site/content/completions/_index.md#specify-valid-filename-extensions-for-flags-that-take-a-filename
+	rootCmd.RegisterFlagCompletionFunc(ARG_FILENAME, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"md"}, cobra.ShellCompDirectiveFilterFileExt
+	})
+
 	rootCmd.PersistentFlags().StringVarP(&argSubstitutions, ARG_SUBSTITUTIONS, "s", "", "Substitutions to apply before show and run. Must be a valid YAML object, e.g. 'id: 87' or '{id: 87, name: \"Mikkel\"}'")
 }

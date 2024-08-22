@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+* [PR-14](https://github.com/mikkelricky/markdown-code-runner/pull/14)
+  Improved completion
+
 ## [v1.1.4] - 2024-08-18
 
 * Bump release
