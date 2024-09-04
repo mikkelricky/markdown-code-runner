@@ -18,8 +18,8 @@ func readCollection() (*codeblock.CodeBlockCollection, error) {
 		collection codeblock.CodeBlockCollection
 		err        error
 	)
-	fi, _ := os.Stdin.Stat()
-	if (fi.Mode() & os.ModeCharDevice) == 0 {
+
+	if filename == "-" {
 		collection, err = codeblock.ParseReader(bufio.NewReader(os.Stdin))
 		if err != nil {
 			return nil, err
@@ -35,7 +35,12 @@ func readCollection() (*codeblock.CodeBlockCollection, error) {
 }
 
 func showCollection(collection codeblock.CodeBlockCollection, substitutions map[string]string) {
-	fmt.Printf("%d block(s) found\n", len(collection.Blocks()))
+	len := len(collection.Blocks())
+	if len == 1 {
+		fmt.Printf("%d block found\n", len)
+	} else {
+		fmt.Printf("%d blocks found\n", len)
+	}
 
 	for index := range collection.Blocks() {
 		if index > 0 {
