@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -14,6 +15,7 @@ const appName = "markdown-code-runner"
 const defaultFilename = "README.md"
 const version = "v1.2.0"
 const ARG_FILENAME = "file"
+const FILENAME_STDIN = "-"
 const ARG_SUBSTITUTIONS = "substitutions"
 const ARG_VERBOSE = "verbose"
 
@@ -76,7 +78,7 @@ func ParseSubstitutions() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, ARG_VERBOSE, "v", false, "verbose output")
-	rootCmd.PersistentFlags().StringVarP(&filename, ARG_FILENAME, "f", defaultFilename, "The file to read code blocks from")
+	rootCmd.PersistentFlags().StringVarP(&filename, ARG_FILENAME, "f", defaultFilename, fmt.Sprintf("The file to read code blocks from. Use %s to read from stdin.", FILENAME_STDIN))
 	// https://github.com/spf13/cobra/blob/main/site/content/completions/_index.md#specify-valid-filename-extensions-for-flags-that-take-a-filename
 	rootCmd.RegisterFlagCompletionFunc(ARG_FILENAME, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"md"}, cobra.ShellCompDirectiveFilterFileExt
