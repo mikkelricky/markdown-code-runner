@@ -76,7 +76,7 @@ func ParseSubstitutions() {
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, ARG_VERBOSE, "v", false, "verbose output")
-	rootCmd.PersistentFlags().StringVarP(&filename, ARG_FILENAME, "f", defaultFilename, "The file to read code blocks from")
+	rootCmd.PersistentFlags().StringVarP(&filename, ARG_FILENAME, "f", defaultFilename, "The file to read code blocks from. Use - to read from stdin.")
 	// https://github.com/spf13/cobra/blob/main/site/content/completions/_index.md#specify-valid-filename-extensions-for-flags-that-take-a-filename
 	rootCmd.RegisterFlagCompletionFunc(ARG_FILENAME, func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"md"}, cobra.ShellCompDirectiveFilterFileExt

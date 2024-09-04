@@ -2,6 +2,7 @@ package codeblock
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -13,6 +14,8 @@ var codeBlockStartPattern = regexp.MustCompile("^ {0,3}(?P<fence>```|~~~)(?P<inf
 var codeBlockEndPattern = regexp.MustCompile("^ {0,3}(?P<fence>```|~~~)")
 
 func ParseReader(reader *bufio.Reader) (CodeBlockCollection, error) {
+	Debug("ParseReader(…)")
+
 	var blocks []CodeBlock
 
 	var inCodeBlock bool = false
@@ -22,6 +25,8 @@ func ParseReader(reader *bufio.Reader) (CodeBlockCollection, error) {
 
 	for scanner.Scan() {
 		line := scanner.Text()
+
+		Debug("line: %s", line)
 
 		match := codeBlockStartPattern.FindStringSubmatch(line)
 		if len(match) > 0 {
@@ -49,10 +54,14 @@ func ParseReader(reader *bufio.Reader) (CodeBlockCollection, error) {
 }
 
 func ParseFile(file *os.File) (CodeBlockCollection, error) {
+	Debug("ParseFile(…)")
+
 	return ParseReader(bufio.NewReader(file))
 }
 
 func ParsePath(path string) (CodeBlockCollection, error) {
+	Debug("ParsePath(%q)", path)
+
 	file, err := os.Open(path)
 	if err != nil {
 		log.Fatal(err)
@@ -64,4 +73,10 @@ func ParsePath(path string) (CodeBlockCollection, error) {
 
 func ParseString(text string) (CodeBlockCollection, error) {
 	return ParseReader(bufio.NewReader(strings.NewReader(text)))
+}
+
+func Debug(format string, a ...any) {
+	fmt.Print("DEBUG: ")
+	fmt.Printf(format, a...)
+	fmt.Println()
 }

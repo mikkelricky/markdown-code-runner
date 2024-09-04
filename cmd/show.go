@@ -18,13 +18,23 @@ func readCollection() (*codeblock.CodeBlockCollection, error) {
 		collection codeblock.CodeBlockCollection
 		err        error
 	)
-	fi, _ := os.Stdin.Stat()
-	if (fi.Mode() & os.ModeCharDevice) == 0 {
+	fi, err := os.Stdin.Stat()
+	if err != nil {
+		panic(err)
+	}
+
+	codeblock.Debug("readCollection; fi.Mode(): %q; os.ModeCharDevice: %q; (fi.Mode() & os.ModeCharDevice): %q", fi.Mode(), os.ModeCharDevice, (fi.Mode() & os.ModeCharDevice))
+	codeblock.Debug("readCollection; fi.Mode(): %q; os.ModeCharDevice: %q; (fi.Mode() & os.ModeCharDevice): %q", fi.Mode(), os.ModeCharDevice, (fi.Mode()&os.ModeCharDevice) == 0)
+	codeblock.Debug("filename: %q", filename)
+
+	if filename == "-" {
+		codeblock.Debug("Reading from stdin …")
 		collection, err = codeblock.ParseReader(bufio.NewReader(os.Stdin))
 		if err != nil {
 			return nil, err
 		}
 	} else {
+		codeblock.Debug("Reading from file %s", filename)
 		collection, err = codeblock.ParsePath(filename)
 		if err != nil {
 			return nil, err
