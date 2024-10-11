@@ -8,12 +8,14 @@ import (
 
 func TestSubstituteBlock(t *testing.T) {
 	testCases := []struct {
+		infoString    string
 		content       string
 		substitutions map[string]string
 
 		expected string
 	}{
 		{
+			"shell",
 			`echo "Hello «name»!"
 `,
 			map[string]string{},
@@ -22,6 +24,27 @@ func TestSubstituteBlock(t *testing.T) {
 		},
 
 		{
+			"shell substitutions='«name»: Mikkel'",
+			`echo "Hello «name»!"
+`,
+			map[string]string{},
+			`echo "Hello Mikkel!"
+`,
+		},
+
+		{
+			"shell substitutions='«name»: Mikkel'",
+			`echo "Hello «name»!"
+`,
+			map[string]string{
+				"«name»": "World",
+			},
+			`echo "Hello World!"
+`,
+		},
+
+		{
+			"shell",
 			`echo "Hello «name»!"
 `,
 			map[string]string{
@@ -32,6 +55,7 @@ func TestSubstituteBlock(t *testing.T) {
 		},
 
 		{
+			"shell",
 			`echo "Hey «name», is your name really «name»?"
 `,
 			map[string]string{
@@ -42,6 +66,7 @@ func TestSubstituteBlock(t *testing.T) {
 		},
 
 		{
+			"shell",
 			`p := (%x%, %y%)
 `,
 			map[string]string{
@@ -54,9 +79,9 @@ func TestSubstituteBlock(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		block := createCodeBlock("``` test", testCase.content, "```")
-		actual := block.Substitute(testCase.substitutions)
-
+		block := createCodeBlock("``` "+testCase.infoString, testCase.content, "```")
+		actual, err := block.Substitute(testCase.substitutions)
+		assert.Nil(t, err)
 		assert.Equal(t, testCase.expected, actual)
 	}
 }

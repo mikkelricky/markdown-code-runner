@@ -120,18 +120,33 @@ markdown-code-runner run example-bash-color
 
 ### Substitutions
 
-Use `--substitutions` to substitute values before showing or running code:
+"Substitutions" can be defined on a block, e.g.
+
+```` markdown
+```php name=example-php-substitutions substitutions='«name»: Mikkel'
+<?php echo "Hello «name»!\n";
+```
+````
+
+and when the code block is run, the result will be
+
+``` console
+Hello Mikkel!
+```
+
+Use `--substitutions` to substitute values, i.e. override any default substitutions, before showing or running a code
+block:
 
 ``` shell
-markdown-code-runner show example-php-substitutions --substitutions '«name»: Mikkel'
-markdown-code-runner run example-php-substitutions --substitutions '«name»: Mikkel'
+markdown-code-runner show example-php-substitutions --substitutions '«name»: James'
+markdown-code-runner run example-php-substitutions --substitutions '«name»: James'
 ```
 
 The substitutions must be a valid YAML mapping mapping a placeholder (e.g. `«name»`) to a value (e.g. `Mikkel`). For
 convenience, use [Flow mappings](https://yaml.org/spec/1.2.2/#742-flow-mappings) for multiple values:
 
 ``` shell
-markdown-code-runner run example-php-substitutions --substitutions '{«name»: Mikkel, «number»: 87, }'
+markdown-code-runner run example-php-substitutions --substitutions '{«name»: Mikkel, «number»: 87}'
 ```
 
 ### Completions
@@ -207,7 +222,7 @@ echo (new DateTimeImmutable())->format(DateTimeInterface::ATOM);
 </html>
 ```
 
-```php name=example-php-substitutions
+```php name=example-php-substitutions substitutions='«name»: Mikkel'
 <?php echo "Hello «name»!\n";
 ```
 
@@ -227,4 +242,8 @@ for((i=16; i<256; i++)); do
     printf '\e[0m';
     [ ! $((($i - 15) % 6)) -eq 0 ] && printf ' ' || printf '\n'
 done
+```
+
+```php name=example-php-substitutions-err substitutions='«name» Mikkel'
+<?php echo "Hello «name»!\n";
 ```

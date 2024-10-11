@@ -91,7 +91,10 @@ func (block CodeBlock) Run(options map[string]string, substitutions map[string]s
 		return cmd.Run()
 	}
 
-	code := block.Substitute(substitutions)
+	code, err := block.Substitute(substitutions)
+	if err != nil {
+		return err
+	}
 
 	switch language {
 	case PHP:

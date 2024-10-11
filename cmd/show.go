@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/alessio/shellescape"
+	"github.com/goccy/go-yaml"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/mikkelricky/markdown-code-runner/codeblock"
 	"github.com/spf13/cobra"
@@ -56,6 +57,10 @@ var headerTransformer = text.Transformer(func(val interface{}) string {
 	return text.Bold.Sprint(val)
 })
 
+var errorTransformer = text.Transformer(func(val interface{}) string {
+	return text.FgRed.Sprint(val)
+})
+
 func showBlock(collection codeblock.CodeBlockCollection, id string, index int, substitutions map[string]string) error {
 	block, err := collection.Get(id)
 	if err != nil {
@@ -82,7 +87,10 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int, s
 
 	fmt.Print(block)
 
-	if block.Substitute(substitutions) != block.GetContent() {
+	content, err := block.Substitute(substitutions)
+	if err != nil {
+		fmt.Println(errorTransformer(err.Error()))
+	} else if content != block.GetContent() {
 		fmt.Println()
 		fmt.Println("With substitutions")
 		fmt.Println()
@@ -108,20 +116,29 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int, s
 		}
 
 		cmd = append(cmd, "run")
+		flags := []string{}
 
-		if strings.HasPrefix(name, "-") {
-			if argSubstitutions != "" {
-				cmd = append(cmd, "--"+ARG_SUBSTITUTIONS, shellescape.Quote(argSubstitutions))
-			}
-			cmd = append(cmd, "--", name)
-		} else {
-			cmd = append(cmd, name)
-			if argSubstitutions != "" {
-				cmd = append(cmd, "--"+ARG_SUBSTITUTIONS, shellescape.Quote(argSubstitutions))
-			}
+		// Substitutions
+		blockSubstitutions, err := block.GetSubstitutions(substitutions)
+		if err != nil {
+			return err
 		}
 
-		fmt.Printf("%s\n", strings.Join(cmd, " "))
+		if len(blockSubstitutions) > 0 {
+			b, err := yaml.Marshal(blockSubstitutions)
+			if err != nil {
+				return err
+			}
+
+			flags = append(flags, "--"+ARG_SUBSTITUTIONS, shellescape.Quote(strings.TrimSpace(string(b))))
+		}
+
+		// If the block name starts with `-` we put it last in the command.
+		if strings.HasPrefix(name, "-") {
+			fmt.Printf("%[1]s %[3]s -- %[2]s\n", strings.Join(cmd, " "), name, strings.Join(flags, " "))
+		} else {
+			fmt.Printf("%[1]s %[2]s %[3]s\n", strings.Join(cmd, " "), name, strings.Join(flags, " "))
+		}
 	}
 	fmt.Println()
 

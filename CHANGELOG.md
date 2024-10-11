@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+* [PR-19](https://github.com/mikkelricky/markdown-code-runner/pull/19)
+  Added block substitutions
+
 ## [v1.2.1] - 2024-09-04
 
 * [PR-17](https://github.com/mikkelricky/markdown-code-runner/pull/17)
