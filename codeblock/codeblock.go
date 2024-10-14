@@ -3,7 +3,11 @@ package codeblock
 import (
 	"fmt"
 	"log"
+	"maps"
 	"strings"
+
+	"github.com/alessio/shellescape"
+	"github.com/goccy/go-yaml"
 )
 
 type CodeBlock struct {
@@ -51,11 +55,29 @@ func (block *CodeBlock) AddLine(line string) {
 	block.content = append(block.content, line)
 }
 
-func (block *CodeBlock) Substitute(substitutions map[string]string) string {
+func (block *CodeBlock) GetSubstitutions(substitutions map[string]string) (map[string]string, error) {
+	value := block.infoString.GetProperty("substitutions")
+
+	blockSubstitutions := map[string]string{}
+	err := yaml.Unmarshal([]byte(value), &blockSubstitutions)
+	if err != nil {
+		return map[string]string{}, fmt.Errorf("error parsing substitutions %v: %s", shellescape.Quote(value), err.Error())
+	}
+
+	maps.Copy(blockSubstitutions, substitutions)
+
+	return blockSubstitutions, nil
+}
+
+func (block *CodeBlock) Substitute(substitutions map[string]string) (string, error) {
 	content := block.GetContent()
-	for from, to := range substitutions {
+	blockSubstitutions, err := block.GetSubstitutions(substitutions)
+	if err != nil {
+		return "", err
+	}
+	for from, to := range blockSubstitutions {
 		content = strings.ReplaceAll(content, from, to)
 	}
 
-	return content
+	return content, nil
 }
