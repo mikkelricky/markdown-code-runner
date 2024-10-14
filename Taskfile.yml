@@ -45,7 +45,7 @@ tasks:
   release:create:
     prompt: Create release {{.CLI_ARGS}}?
     cmds:
-      - gh itkdev changelog add-release {{ .CLI_ARGS }} --base main
+      - gh itkdev changelog --release {{ .CLI_ARGS }} --base main
       - sed -i'' -E 's/(const version = ")[^"]+(")/\1{{.CLI_ARGS}}\2/' cmd/root.go
       - git diff
       - task: build
