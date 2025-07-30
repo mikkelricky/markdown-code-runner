@@ -8,7 +8,6 @@ import (
 )
 
 func assertInfoStringsEqual(t assert.TestingT, this InfoString, that InfoString) bool {
-
 	if !assert.Equal(t, this.name, that.name, "info strings should have the same name") {
 		return false
 	}

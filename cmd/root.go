@@ -6,18 +6,21 @@ import (
 	"os"
 	"strings"
 
-	"github.com/alessio/shellescape"
+	"al.essio.dev/pkg/shellescape"
+
 	"github.com/goccy/go-yaml"
 	"github.com/spf13/cobra"
 )
 
-const appName = "markdown-code-runner"
-const defaultFilename = "README.md"
-const version = "v1.3.0"
-const ARG_FILENAME = "file"
-const FILENAME_STDIN = "-"
-const ARG_SUBSTITUTIONS = "substitutions"
-const ARG_VERBOSE = "verbose"
+const (
+	appName           = "markdown-code-runner"
+	defaultFilename   = "README.md"
+	version           = "v1.3.0"
+	ARG_FILENAME      = "file"
+	FILENAME_STDIN    = "-"
+	ARG_SUBSTITUTIONS = "substitutions"
+	ARG_VERBOSE       = "verbose"
+)
 
 func check(err error) {
 	if err != nil {

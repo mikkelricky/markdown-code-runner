@@ -9,13 +9,15 @@ import (
 )
 
 // https://github.github.com/gfm/#fenced-code-blocks
-var codeBlockStartPattern = regexp.MustCompile("^ {0,3}(?P<fence>```|~~~)(?P<infoString>[^`]+)")
-var codeBlockEndPattern = regexp.MustCompile("^ {0,3}(?P<fence>```|~~~)")
+var (
+	codeBlockStartPattern = regexp.MustCompile("^ {0,3}(?P<fence>```|~~~)(?P<infoString>[^`]+)")
+	codeBlockEndPattern   = regexp.MustCompile("^ {0,3}(?P<fence>```|~~~)")
+)
 
 func ParseReader(reader *bufio.Reader) (CodeBlockCollection, error) {
 	var blocks []CodeBlock
 
-	var inCodeBlock bool = false
+	inCodeBlock := false
 	var codeBlockStart string
 	var code []string
 	scanner := bufio.NewScanner(reader)

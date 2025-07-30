@@ -1,0 +1,25 @@
+# https://golangci-lint.run/usage/configuration/#config-file
+
+version: "2"
+
+# https://golangci-lint.run/usage/false-positives/
+linters:
+  exclusions:
+    rules:
+      - path: 'codeblock/executor.go'
+        text: 'Error return value of `stdin.Close` is not checked'
+
+      - path: 'codeblock/executor.go'
+        text: 'Error return value of `io.WriteString` is not checked'
+
+      - path: 'codeblock/executor.go'
+        text: 'Error return value of `os.Remove` is not checked'
+
+      - path: 'codeblock/executor.go'
+        text: 'Error return value of `os.Setenv` is not checked'
+
+      - path: 'codeblock/parser.go'
+        text: 'Error return value of `file.Close` is not checked'
+
+      - path: 'cmd/.+\.go'
+        text: 'Error return value of `(.+)\.RegisterFlagCompletionFunc` is not checked'

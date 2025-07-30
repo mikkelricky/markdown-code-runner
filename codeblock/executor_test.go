@@ -34,11 +34,11 @@ func catchOutput(t *testing.T, runnable func() error) (string, string, error) {
 
 	// need to close here, otherwise ReadAll never gets "EOF".
 	dieOn(stdoutFake.Close(), t)
-	stdoutBytes, err := io.ReadAll(stdoutReader)
+	stdoutBytes, _ := io.ReadAll(stdoutReader)
 	dieOn(stdoutReader.Close(), t)
 
 	dieOn(stderrFake.Close(), t)
-	stderrBytes, err := io.ReadAll(stderrReader)
+	stderrBytes, _ := io.ReadAll(stderrReader)
 	dieOn(stderrReader.Close(), t)
 
 	return string(stdoutBytes), string(stderrBytes), err

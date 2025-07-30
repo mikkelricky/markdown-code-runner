@@ -6,7 +6,8 @@ import (
 	"maps"
 	"strings"
 
-	"github.com/alessio/shellescape"
+	"al.essio.dev/pkg/shellescape"
+
 	"github.com/goccy/go-yaml"
 )
 
@@ -58,10 +59,12 @@ func (block *CodeBlock) AddLine(line string) {
 func (block *CodeBlock) GetSubstitutions(substitutions map[string]string) (map[string]string, error) {
 	value := block.infoString.GetProperty("substitutions")
 
-	blockSubstitutions := map[string]string{}
+	var blockSubstitutions map[string]string
 	err := yaml.Unmarshal([]byte(value), &blockSubstitutions)
 	if err != nil {
 		return map[string]string{}, fmt.Errorf("error parsing substitutions %v: %s", shellescape.Quote(value), err.Error())
+	} else if len(blockSubstitutions) == 0 {
+		blockSubstitutions = map[string]string{}
 	}
 
 	maps.Copy(blockSubstitutions, substitutions)
