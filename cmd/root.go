@@ -15,7 +15,6 @@ import (
 const (
 	appName           = "markdown-code-runner"
 	defaultFilename   = "README.md"
-	version           = "v1.3.0"
 	ARG_FILENAME      = "file"
 	FILENAME_STDIN    = "-"
 	ARG_SUBSTITUTIONS = "substitutions"
@@ -29,6 +28,7 @@ func check(err error) {
 }
 
 var (
+	version          = "main"
 	verbose          bool
 	filename         string
 	argSubstitutions string
