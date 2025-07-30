@@ -7,7 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/alessio/shellescape"
+	"al.essio.dev/pkg/shellescape"
+
 	"github.com/goccy/go-yaml"
 	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/mikkelricky/markdown-code-runner/codeblock"
@@ -49,7 +50,10 @@ func showCollection(collection codeblock.CodeBlockCollection, substitutions map[
 			fmt.Println()
 		}
 
-		showBlock(collection, strconv.Itoa(index), index, substitutions)
+		err := showBlock(collection, strconv.Itoa(index), index, substitutions)
+		if err != nil {
+			fmt.Println(err)
+		}
 	}
 }
 
@@ -94,7 +98,7 @@ func showBlock(collection codeblock.CodeBlockCollection, id string, index int, s
 		fmt.Println()
 		fmt.Println("With substitutions")
 		fmt.Println()
-		fmt.Print(block.Substitute(substitutions))
+		fmt.Print(content)
 		fmt.Println()
 	}
 

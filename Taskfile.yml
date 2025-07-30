@@ -1,30 +1,73 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
+
+vars:
+  APP_NAME: markdown-code-runner
 
 tasks:
   run:
     cmds:
-      - go run ./main.go
-    # silent: true
+      - go run ./... {{.CLI_ARGS}}
+    silent: true
 
   build:
+    sources:
+      - '**/*.go'
+    generates:
+      - '{{.APP_NAME}}'
     cmds:
+      - go get -u ./...
+      - go mod tidy
       - task: format
       - task: check
-      - go mod tidy
       - go build
     # silent: true
 
   format:
     cmds:
       - go fmt ./...
-    # silent: true
+      - task format:gofumpt
+      - task format:golangci-lint
+
+  format:gofumpt:
+    desc: Run gofumpt if installed (https://github.com/mvdan/gofumpt)
+    cmds:
+      - |
+        if command -v gofumpt >/dev/null 2>&1; then
+          gofumpt -l -w .
+        fi
+
+  format:golangci-lint:
+    desc: Run golangci-lint if installed (https://golangci-lint.run)
+    cmds:
+      - |
+        if command -v golangci-lint >/dev/null 2>&1; then
+          golangci-lint fmt
+        fi
 
   check:
     cmds:
       - go vet ./...
+      - task: check:gofumpt
+      - task: check:golangci-lint
     # silent: true
+
+  check:gofumpt:
+    desc: Run gofumpt if installed (https://github.com/mvdan/gofumpt)
+    cmds:
+      - |
+        if command -v gofumpt >/dev/null 2>&1; then
+          gofumpt -l .
+        fi
+
+  check:golangci-lint:
+    desc: Run golangci-lint if installed (https://golangci-lint.run)
+    cmds:
+      - |
+        if command -v golangci-lint >/dev/null 2>&1; then
+          golangci-lint run
+        fi
 
   test:
     deps:

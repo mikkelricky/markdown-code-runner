@@ -20,7 +20,6 @@ func TestParseFileBootstrap(t *testing.T) {
 func TestParseFile(t *testing.T) {
 	path := "testdata/tests.md"
 	expected := NewCodeBlockCollection([]CodeBlock{
-
 		createCodeBlock(
 			"``` sh",
 			`echo -n " sh"
