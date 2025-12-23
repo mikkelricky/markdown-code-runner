@@ -2,6 +2,12 @@
 
 Show and run [fenced code blocks](https://github.github.com/gfm/#fenced-code-blocks) in Markdown files.
 
+> [!NOTE]
+> I created and named this project before discovering
+> [basnijholt/markdown-code-runner](https://github.com/basnijholt/markdown-code-runner). The two projects share some
+> similarities, but the main focus if [this project](mikkelricky/markdown-code-runner) is to execute code blocks rather
+> than capturing the output from the code.
+
 ## Support languages
 
 * `bash`
